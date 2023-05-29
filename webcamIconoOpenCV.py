@@ -4,7 +4,7 @@ video_capture = cv2.VideoCapture(0)
 
 
 def get_media_by_difficulty_and_step(difficulty, step):
-    return f'Project/{difficulty}.png'
+    return f'medias/{difficulty}.png'
 
 
 logo = cv2.imread(get_media_by_difficulty_and_step("facil", None), cv2.IMREAD_UNCHANGED)
