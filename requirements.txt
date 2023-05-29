@@ -1,1 +1,4 @@
 pyaudio
+SpeechRecognition
+pocketsphinx
+opencv-python

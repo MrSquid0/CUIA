@@ -1,20 +1,37 @@
 import cv2
+import speech_recognition as sr
 
 video_capture = cv2.VideoCapture(0)
 
+rec = sr.Recognizer()
+mic = sr.Microphone()
+
+text = None
+while(text != "fácil" and text != "dificil"):
+    try:
+        with mic as source:
+            print(f"Recording audio...")
+            rec.adjust_for_ambient_noise(source, duration=0.5)
+            audio = rec.listen(source)
+
+            text = rec.recognize_google(audio, language='es-ES')
+
+            print(f"What I understood: '{text}'")
+    except Exception as e:
+        print(f"Error reading input. Gonna retry... ({e})")
 
 def get_media_by_difficulty_and_step(difficulty, step):
     return f'medias/{difficulty}.png'
 
 
-logo = cv2.imread(get_media_by_difficulty_and_step("facil", None), cv2.IMREAD_UNCHANGED)
+logo = cv2.imread(get_media_by_difficulty_and_step(text, None), cv2.IMREAD_UNCHANGED)
 
 while True:
     ret, background = video_capture.read()
 
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(background,
-                                                       cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_100),
-                                                       parameters=cv2.aruco.DetectorParameters())
+    detector = cv2.aruco.ArucoDetector(cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_100), cv2.aruco.DetectorParameters())
+
+    (corners, ids, rejected) = detector.detectMarkers(background)
 
     marca_de_agua = cv2.resize(logo, None, fx=0.34, fy=0.3)
 
