@@ -2,7 +2,12 @@ import cv2
 
 video_capture = cv2.VideoCapture(0)
 
-logo = cv2.imread('opencv.png', cv2.IMREAD_UNCHANGED)
+
+def get_media_by_difficulty_and_step(difficulty, step):
+    return f'Project/{difficulty}.png'
+
+
+logo = cv2.imread(get_media_by_difficulty_and_step("facil", None), cv2.IMREAD_UNCHANGED)
 
 while True:
     ret, background = video_capture.read()
@@ -29,7 +34,6 @@ while True:
         tercer_parametro = int(corners[0][0][1][0]) - anchura_logo
         cuarto_parametro = int(corners[0][0][1][0])
 
-        print(f"Resizing to [{cuarto_parametro - tercer_parametro}, {segundo_parametro - primer_parametro}]")
         marca_de_agua = cv2.resize(logo, (cuarto_parametro - tercer_parametro, segundo_parametro - primer_parametro))
 
     if len(corners) > 0 \
