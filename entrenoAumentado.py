@@ -23,7 +23,7 @@ while True:
     print("Intentando verificar cara, mira fijamente a la cámara y no te muevas...")
     ret, frame = video_capture.read()
     # Show the captured frame
-    cv2.imshow('Input', frame)
+    cv2.imshow('Mira fijamente a la camara y no te muevas...', frame)
     cv2.imwrite('capture.jpg', frame)
     caras = DeepFace.extract_faces(img_path="capture.jpg", detector_backend='retinaface', enforce_detection=False)
 
@@ -80,9 +80,19 @@ cv2.destroyAllWindows()
 
 video_capture = cv2.VideoCapture(0)
 
-def get_media_by_difficulty_and_step(difficulty, ejercicio):
+def get_media_by_difficulty_and_step(ejercicio, difficulty):
     if ejercicio is None:
         return 'medias/flexiones-facil.png'
+    else:
+        if ejercicio[0] == 1:
+            ejercicio = 'flexiones'
+
+        if ejercicio[0] == 2:
+            ejercicio = 'gluteos'
+
+        if ejercicio[0] == 3:
+            ejercicio = 'plancha'
+
     return f'medias/{ejercicio}-{difficulty.replace("í", "i").replace("á", "a")}.png'
 
 while True:
@@ -93,8 +103,7 @@ while True:
 
     (corners, ids, rejected) = detector.detectMarkers(background)
 
-
-    logo = cv2.imread(get_media_by_difficulty_and_step(text, None), cv2.IMREAD_UNCHANGED)
+    logo = cv2.imread(get_media_by_difficulty_and_step(ids, text), cv2.IMREAD_UNCHANGED)
 
     marca_de_agua = cv2.resize(logo, None, fx=0.34, fy=0.3)
 
@@ -103,7 +112,7 @@ while True:
 
     minilog = marca_de_agua[:, :, 0:3]
     altura_logo, anchura_logo, _ = minilog.shape
-    alfa = marca_de_agua[:, :, 3]
+    alfa = marca_de_agua[:, :, 2]
     inverso_alfa = 255 - alfa  # inverso de alfa
     alfa = cv2.cvtColor(alfa, cv2.COLOR_GRAY2BGR) / 255
     inverso_alfa = cv2.cvtColor(inverso_alfa, cv2.COLOR_GRAY2BGR) / 255
