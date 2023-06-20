@@ -18,11 +18,11 @@ preferences_dir = 'preferences'
 user = ""
 dificultad = ""
 
-# reconocimiento facial
+# Reconocimiento facial
 while True:
     print("Intentando verificar cara, mira fijamente a la cámara y no te muevas...")
     ret, frame = video_capture.read()
-    # Show the captured frame
+    # Muestra el frame capturado
     cv2.imshow('Mira fijamente a la camara y no te muevas...', frame)
     cv2.imwrite('capture.jpg', frame)
     caras = DeepFace.extract_faces(img_path="capture.jpg", detector_backend='retinaface', enforce_detection=False)
@@ -45,11 +45,13 @@ while True:
                 break
 
         if known == False:
+            print("Reconocimiento finalizado. No consta como usuario registrado")
             user = uuid.uuid4()
             shutil.copyfile("capture.jpg", f"{known_persons_directory}/{user}.png")
             break
         else:
-            print(f"Has sido reconocido como el usuario {user}")
+            print(f"Reconocimiento finalizado. Has sido reconocido como el usuario ya registrado {user}")
+            print("Ahora tienes que decir por voz la dificultad del ejercicio que quieres visualizar")
             break
     else:
         print("Ninguna cara detectada. Reintentando....")
@@ -61,7 +63,7 @@ if os.path.exists(f"{preferences_dir}/{user}"):
 while (text != "fácil" and text != "difícil"):
     try:
         with mic as source:
-            print("Grabando audio... Di 'fácil' o 'difícil para mostrar el ejercicio adecuado'")
+            print("Grabando audio... Di 'fácil' o 'difícil' para mostrar el ejercicio adecuado")
             rec.adjust_for_ambient_noise(source, duration=0.5)
             audio = rec.listen(source)
 
@@ -132,7 +134,7 @@ while True:
                            tercer_parametro:cuarto_parametro] * inverso_alfa + minilog * alfa
         primer_plano[primer_parametro:segundo_parametro, tercer_parametro:cuarto_parametro] = esquina_inferior
 
-    cv2.imshow('Entreno Aumentado', background)
+    cv2.imshow('Entreno Aumentado CUIA', background)
 
     k = cv2.waitKey(1)
     if k == ord('q'):
